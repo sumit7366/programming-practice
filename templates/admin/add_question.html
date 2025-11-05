@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Add Question - Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item active">Add Question</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-plus-circle me-2"></i>Add New Question</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="mb-3">
+                            {{ form.topic.label(class="form-label fw-bold") }}
+                            {{ form.topic(class="form-select") }}
+                            {% for error in form.topic.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.difficulty.label(class="form-label fw-bold") }}
+                            {{ form.difficulty(class="form-select") }}
+                            {% for error in form.difficulty.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.question.label(class="form-label fw-bold") }}
+                            {{ form.question(class="form-control", rows="4", placeholder="Enter the question here...") }}
+                            {% for error in form.question.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                            <div class="form-text">Be clear and concise with your question.</div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            {{ form.answer.label(class="form-label fw-bold") }}
+                            {{ form.answer(class="form-control", rows="6", placeholder="Enter the answer with code examples...") }}
+                            {% for error in form.answer.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                            <div class="form-text">Use code blocks and explanations for better understanding.</div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary me-md-2">
+                                <i class="fas fa-arrow-left me-1"></i> Cancel
+                            </a>
+                            {{ form.submit(class="btn btn-primary") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card mt-4 shadow">
+                <div class="card-header bg-info text-white">
+                    <h6 class="mb-0"><i class="fas fa-lightbulb me-2"></i>Tips for Adding Questions</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        <li>Use clear and specific questions</li>
+                        <li>Include code examples in answers when possible</li>
+                        <li>Format code properly using code blocks</li>
+                        <li>Set appropriate difficulty levels</li>
+                        <li>Test questions before adding them</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

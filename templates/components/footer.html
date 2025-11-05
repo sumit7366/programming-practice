@@ -1,0 +1,113 @@
+<footer class="bg-dark text-white py-4 mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h5 class="fw-bold mb-3">Programming Practice Portal</h5>
+                <p class="text-light mb-3">
+                    Master programming through hands-on practice with categorized questions from basic to advanced
+                    levels.
+                </p>
+                <div class="d-flex">
+                    <a href="https://github.com/sumit7366" class="text-light me-3">
+                        <i class="fab fa-github fa-lg"></i>
+                    </a>
+                    <a href="https://www.instagram.com/9._sumit/#" class="text-light me-3">
+                        <i class="fab fa-instagram fa-lg"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/sumitkumarrr/" class="text-light">
+                        <i class="fab fa-linkedin fa-lg"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <h6 class="fw-bold mb-3">Quick Links</h6>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <a href="{{ url_for('index') }}" class="text-light text-decoration-none">
+                            <i class="fas fa-home me-1"></i> Home
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#topics" class="text-light text-decoration-none">
+                            <i class="fas fa-book me-1"></i> Topics
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="text-light text-decoration-none">
+                            <i class="fas fa-chart-line me-1"></i> Progress
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-md-3">
+                <h6 class="fw-bold mb-3">Support</h6>
+                <ul class="list-unstyled">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <!-- Help link triggers a prompt to send email -->
+                            <a href="#" class="text-light text-decoration-none" onclick="sendHelpEmail()">
+                                <i class="fas fa-question-circle me-1"></i> Help
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <!-- Contact link opens email client directly -->
+                            <a href="mailto:sumitranjanhisu@gmail.com@example.com" class="text-light text-decoration-none">
+                                <i class="fas fa-envelope me-1"></i> Contact
+                            </a>
+                        </li>
+                    </ul>
+
+                    <script>
+                        function sendHelpEmail() {
+                            // Ask user for subject and message
+                            const subject = prompt("Enter the subject for your help request:", "Help Needed");
+                            if (!subject) return; // Cancelled
+                            const body = prompt("Enter your message:", "");
+                            if (body === null) return; // Cancelled
+
+                            // Open mail client with prefilled info
+                            const email = "sumitranjanhisu@gmail.com"; // Replace with your email
+                            const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                            window.location.href = mailtoLink;
+                        }
+                    </script>
+
+                    <li class="mb-2">
+                        <!-- Hidden Admin Access - Copyright Button -->
+                        <!-- <a href="{{ url_for('admin_login') }}" class="text-light text-decoration-none"
+                            title="Admin Access - Click for admin login">
+                            <i class="fas fa-copyright me-1"></i> Copyright
+                        </a> -->
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <hr class="my-4 bg-light">
+
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <p class="mb-0 text-light">
+                    &copy; <span id="currentYear"></span> Programming Practice Portal. All rights reserved.
+                </p>
+
+                <script>
+                    document.getElementById('currentYear').textContent = new Date().getFullYear();
+                </script>
+
+            </div>
+            <div class="col-md-6 text-md-end">
+                <p class="mb-0 text-light">
+                    Built with <i class="fas fa-heart text-danger"></i>
+                    <a href="{{ url_for('admin_login') }}" class="text-light text-decoration-none"
+                        title="Admin Access - Click for admin login">
+                        Sumit
+                    </a>Kumar
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>

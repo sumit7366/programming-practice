@@ -1,0 +1,118 @@
+/* Basic styles to ensure everything works */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.hero-section {
+    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+    color: white;
+    padding: 4rem 0;
+}
+
+.card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.question-card {
+    border-left: 4px solid #0d6efd;
+}
+
+/* Ensure navbar and footer look good */
+.navbar-brand {
+    font-weight: bold;
+}
+
+footer {
+    margin-top: auto;
+}
+
+
+:root {
+    --primary-color: #0d6efd;
+    --secondary-color: #6c757d;
+    --success-color: #198754;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #0dcaf0;
+    --light-color: #f8f9fa;
+    --dark-color: #212529;
+}
+
+[data-bs-theme="dark"] {
+    --bg-color: #1a1d20;
+    --text-color: #e9ecef;
+    --card-bg: #2d3034;
+    --border-color: #404448;
+}
+
+body {
+    background-color: var(--bg-color, white);
+    color: var(--text-color, black);
+    transition: all 0.3s ease;
+}
+
+.card {
+    background-color: var(--card-bg, white);
+    border: 1px solid var(--border-color, #dee2e6);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
+}
+
+.hero-section {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #0a58ca 100%);
+}
+
+.question-card {
+    border-left: 4px solid var(--primary-color);
+}
+
+.show-answer-btn.collapsed .fa-chevron-down {
+    transform: rotate(0deg);
+}
+
+.show-answer-btn .fa-chevron-down {
+    transform: rotate(180deg);
+    transition: transform 0.3s ease;
+}
+
+pre code {
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+.mark-complete-btn.completed {
+    background-color: var(--success-color);
+    color: white;
+}
+
+/* Syntax highlighting for C code */
+code.language-c {
+    color: #e9ecef;
+    background-color: #2d3034;
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+}

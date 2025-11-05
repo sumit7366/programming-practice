@@ -1,0 +1,273 @@
+<div class="card question-card mb-4 shadow-sm">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start">
+            <div class="flex-grow-1">
+                <h5 class="card-title">
+                    Q{{ question_number }}. {{ question.question }}
+                    <span class="badge bg-{{ 'success' if question.difficulty == 'Basic' else 'warning' if question.difficulty == 'Medium' else 'danger' }} ms-2">
+                        {{ question.difficulty }}
+                    </span>
+                    {% if current_user.is_authenticated %}
+                        {% set user_progress = question.user_progress|selectattr('user_id', 'equalto', current_user.id)|first %}
+                        {% if user_progress and user_progress.completed %}
+                            <span class="badge bg-success ms-1">
+                                <i class="fas fa-check me-1"></i>Completed
+                            </span>
+                        {% endif %}
+                    {% endif %}
+                </h5>
+            </div>
+            <button class="btn btn-outline-primary show-answer-btn" 
+                    data-bs-toggle="collapse" 
+                    data-bs-target="#answer{{ question.id }}"
+                    aria-expanded="false" 
+                    aria-controls="answer{{ question.id }}">
+                <span class="show-text">Show Answer</span>
+                <span class="hide-text" style="display: none;">Hide Answer</span>
+                <i class="fas fa-chevron-down ms-1"></i>
+            </button>
+        </div>
+        
+        <div class="collapse mt-3" id="answer{{ question.id }}">
+            <div class="card card-body bg-light">
+                <h6 class="text-primary mb-3">
+                    <i class="fas fa-lightbulb me-2"></i>Answer & Explanation
+                </h6>
+                <pre class="mb-0"><code class="language-c">{{ question.answer }}</code></pre>
+                
+                <!-- Code Editor Section -->
+                <div class="mt-3 code-editor-section">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="text-success mb-0">
+                            <i class="fas fa-code me-2"></i>Try It Yourself
+                        </h6>
+                        <button class="btn btn-sm btn-outline-secondary copy-code-btn" data-code="{{ question.answer|escape }}">
+                            <i class="fas fa-copy me-1"></i>Copy Code
+                        </button>
+                    </div>
+                    <textarea class="form-control code-textarea font-monospace small" 
+                              rows="8" 
+                              placeholder="Modify the code here to experiment...">{{ question.answer }}</textarea>
+                    <div class="mt-2">
+                        <button class="btn btn-sm btn-success run-code-btn" data-editor-id="editor-{{ question.id }}">
+                            <i class="fas fa-play me-1"></i>Run Code
+                        </button>
+                        <button class="btn btn-sm btn-outline-info reset-code-btn" data-original-code="{{ question.answer|escape }}">
+                            <i class="fas fa-undo me-1"></i>Reset
+                        </button>
+                    </div>
+                    <div class="output-area mt-2" style="display: none;">
+                        <div class="output-header bg-dark text-white p-2 rounded-top">
+                            <span class="fw-bold">Output</span>
+                        </div>
+                        <div class="output-content bg-light text-dark p-3 rounded-bottom" id="output-{{ question.id }}">
+                            <em class="text-muted">Output will appear here...</em>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-3 d-flex justify-content-between align-items-center">
+            {% if current_user.is_authenticated %}
+                <button class="btn btn-sm btn-outline-success mark-complete-btn" 
+                        data-question-id="{{ question.id }}"
+                        data-completed="{% if user_progress and user_progress.completed %}true{% else %}false{% endif %}">
+                    <i class="fas fa-check me-1"></i>
+                    <span class="btn-text">
+                        {% if user_progress and user_progress.completed %}Completed{% else %}Mark Complete{% endif %}
+                    </span>
+                </button>
+            {% else %}
+                <a href="{{ url_for('admin_login') }}" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-sign-in-alt me-1"></i>Login to track progress
+                </a>
+            {% endif %}
+            
+            <div class="text-muted small">
+                <i class="fas fa-tag me-1"></i>{{ question.topic.name }}
+                {% if question.created_at %}
+                    • <i class="fas fa-calendar me-1"></i>{{ question.created_at.strftime('%Y-%m-%d') }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.question-card {
+    border-left: 4px solid #0d6efd;
+    transition: all 0.3s ease;
+}
+
+.question-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+}
+
+.show-answer-btn.collapsed .fa-chevron-down {
+    transform: rotate(0deg);
+}
+
+.show-answer-btn .fa-chevron-down {
+    transform: rotate(180deg);
+    transition: transform 0.3s ease;
+}
+
+.code-textarea {
+    font-family: 'Courier New', monospace;
+    font-size: 0.85em;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+}
+
+.mark-complete-btn.completed {
+    background-color: #198754;
+    color: white;
+    border-color: #198754;
+}
+
+.output-area {
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+}
+
+/* Smooth transitions */
+.collapse {
+    transition: all 0.3s ease;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle show/hide text for answer buttons
+    const answerButtons = document.querySelectorAll('.show-answer-btn');
+    answerButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const showText = this.querySelector('.show-text');
+            const hideText = this.querySelector('.hide-text');
+            const isCollapsed = this.getAttribute('aria-expanded') === 'false';
+            
+            if (isCollapsed) {
+                showText.style.display = 'none';
+                hideText.style.display = 'inline';
+            } else {
+                showText.style.display = 'inline';
+                hideText.style.display = 'none';
+            }
+        });
+    });
+    
+    // Copy code functionality
+    const copyButtons = document.querySelectorAll('.copy-code-btn');
+    copyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const code = this.dataset.code;
+            navigator.clipboard.writeText(code).then(() => {
+                const originalHTML = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-check me-1"></i>Copied!';
+                this.classList.add('btn-success');
+                this.classList.remove('btn-outline-secondary');
+                
+                setTimeout(() => {
+                    this.innerHTML = originalHTML;
+                    this.classList.remove('btn-success');
+                    this.classList.add('btn-outline-secondary');
+                }, 2000);
+            });
+        });
+    });
+    
+    // Reset code functionality
+    const resetButtons = document.querySelectorAll('.reset-code-btn');
+    resetButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const originalCode = this.dataset.originalCode;
+            const textarea = this.closest('.code-editor-section').querySelector('.code-textarea');
+            textarea.value = originalCode;
+        });
+    });
+    
+    // Mark complete functionality
+    const markCompleteButtons = document.querySelectorAll('.mark-complete-btn');
+    markCompleteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const questionId = this.dataset.questionId;
+            const isCompleted = this.dataset.completed === 'true';
+            
+            fetch(`/api/mark-complete/${questionId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Please login to track progress');
+                    return;
+                }
+                
+                const btnText = this.querySelector('.btn-text');
+                if (data.completed) {
+                    this.classList.add('completed');
+                    btnText.textContent = 'Completed';
+                    this.dataset.completed = 'true';
+                } else {
+                    this.classList.remove('completed');
+                    btnText.textContent = 'Mark Complete';
+                    this.dataset.completed = 'false';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
+    
+    // Run code simulation (basic version)
+    const runCodeButtons = document.querySelectorAll('.run-code-btn');
+    runCodeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const editorId = this.dataset.editorId;
+            const codeSection = this.closest('.code-editor-section');
+            const textarea = codeSection.querySelector('.code-textarea');
+            const outputArea = codeSection.querySelector('.output-area');
+            const outputContent = codeSection.querySelector('.output-content');
+            
+            const code = textarea.value;
+            
+            // Show loading state
+            outputContent.innerHTML = '<div class="text-center"><div class="spinner-border spinner-border-sm me-2"></div>Running code...</div>';
+            outputArea.style.display = 'block';
+            
+            // Simulate code execution (replace with actual API call)
+            setTimeout(() => {
+                if (code.includes('printf') && code.includes('"')) {
+                    // Extract text from printf statements
+                    const printfMatches = code.match(/printf\s*\(\s*"([^"]*)"\s*\)/g);
+                    let output = '';
+                    if (printfMatches) {
+                        printfMatches.forEach(match => {
+                            const textMatch = match.match(/printf\s*\(\s*"([^"]*)"\s*\)/);
+                            if (textMatch && textMatch[1]) {
+                                output += textMatch[1] + '\\n';
+                            }
+                        });
+                    }
+                    
+                    if (output) {
+                        outputContent.innerHTML = `<pre class="mb-0 text-success">${output}</pre>`;
+                    } else {
+                        outputContent.innerHTML = '<div class="text-success">Code executed successfully!</div>';
+                    }
+                } else if (code.includes('error') || code.includes('Error')) {
+                    outputContent.innerHTML = '<div class="text-danger">Compilation error: Please check your code syntax.</div>';
+                } else {
+                    outputContent.innerHTML = '<div class="text-info">Code executed successfully! (No output generated)</div>';
+                }
+            }, 1000);
+        });
+    });
+});
+</script>

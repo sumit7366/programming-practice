@@ -1,0 +1,42 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="{{ url_for('index') }}">
+            <i class="fas fa-code me-2"></i>Programming Portal
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        Topics
+                    </a>
+                    <ul class="dropdown-menu">
+                        {% if topics %}
+                            {% for topic in topics %}
+                            <li><a class="dropdown-item" href="{{ url_for('topic_questions', topic_name=topic.name) }}">
+                                {{ topic.name }}
+                            </a></li>
+                            {% endfor %}
+                        {% else %}
+                            <li><a class="dropdown-item text-muted" href="#">No topics available</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+            </ul>
+            
+            <div class="d-flex">
+                <button class="btn btn-outline-light me-2" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <input class="form-control me-2" type="search" placeholder="Search questions..." id="searchInput">
+            </div>
+        </div>
+    </div>
+</nav>
